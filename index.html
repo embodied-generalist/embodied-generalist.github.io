@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="LEO: An Embodied Generalist Agent in 3D World">
+  <meta name="keywords" content="Embodied Generalist Agent, 3D Generalist Agent, 3D Vision-Language-Action, Multi-Modal Instruction Tuning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Embodied Generalist LEO</title>
+
+  <script>
+    // function borrowed from PerAct
+    function UpdateCapabilityDemo() {
+      var capability = document.getElementById("capability").value;
+      console.log("capability", capability)
+      var img1 = document.getElementById("scene1");
+      img1.src = "assets/" + "demo_" + capability + "_scene1.png"
+      img1.alt = "updated"
+    }
+
+    // functions borrowed from PaLM-E
+    timeoutIds = [];
+        
+    function populateDemo(imgs) {
+      // Get the expanded image
+      var expandImg = document.getElementById("expandedImg");
+      // Get the image text
+      var imgText = document.getElementById("imgtext");
+      var answer = document.getElementById("answer");
+  
+      // Use the same src in the expanded image as the image being clicked on from the grid
+      expandImg.src = imgs.src;
+      // Use the value of the alt attribute of the clickable image as text inside the expanded image
+      var qa = imgs.alt.split("[sep]");
+      imgText.innerHTML = qa[0];
+      answer.innerHTML = "";
+      // Show the container element (hidden with CSS)
+      expandImg.parentElement.style.display = "block";
+      for (timeoutId of timeoutIds) {
+          clearTimeout(timeoutId);
+      }
+      typeWriter(qa[1], 0, qa[0]);
+    }
+        
+    function typeWriter(txt, i, q) {
+      var imgText = document.getElementById("imgtext");
+      if (imgText.innerHTML == q) {
+        if (i < txt.length) {
+          document.getElementById("answer").innerHTML += txt.charAt(i);
+          i++;
+          timeoutIds.push(setTimeout(typeWriter, 20, txt, i, q));
+        }
+      }
+    }
+
+  </script>
+
+  <!-- imported in PaLM-E -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+  <link rel="stylesheet" href="https://github.com/palm-e/palm-e.github.io/blob/main/css/app.css">
+
+  <link rel="stylesheet" href="https://github.com/palm-e/palm-e.github.io/blob/main/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+  
+  <script src="https://github.com/palm-e/palm-e.github.io/blob/main/js/app.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./assets/leo.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+</head>
+
+<body onload="UpdateCapabilityDemo(); populateDemo();">
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" target="_blank" href="https://siyuanhuang.com/">
+        <span class="icon">
+          <i class="fas fa-home"></i>
+        </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+        More Research
+        </a>
+        <div class="navbar-dropdown">
+        <a class="navbar-item" target="_blank" href="https://scenediffuser.github.io/">
+            SceneDiffuser
+        </a>
+        <a class="navbar-item" target="_blank" href="https://sqa3d.github.io/">
+            SQA3D
+        </a>
+        <a class="navbar-item" target="_blank" href="https://arnold-benchmark.github.io/">
+            ARNOLD
+        </a>
+        <a class="navbar-item" target="_blank" href="https://3d-vista.github.io/">
+            3D-VisTA
+        </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <img src="assets/leo.svg" width="10%">
+          <h1 class="title is-1 publication-title">An Embodied Generalist Agent in 3D World</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a target="_blank" href=https://huangjy-pku.github.io/">Jiangyong Huang</a><sup>1,2✶</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://silongyong.github.io/">Silong Yong</a><sup>1,3✶</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://jeasinema.github.io/">Xiaojian Ma</a><sup>1✶</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://github.com/Germany321">Xiongkun Linghu</a><sup>1✶</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://xiaoyao-li.github.io/">Puhao Li</a><sup>1,4</sup>,</span>
+            <br/>
+            <span class="author-block">
+              <a target="_blank" href="https://github.com/jetpackfirstme">Yan Wang</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://liqing-ustc.github.io/">Qing Li</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="http://www.stat.ucla.edu/~sczhu/">Song-Chun Zhu</a><sup>1,2,4</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://buzz-beater.github.io/">Baoxiong Jia</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a target="_blank" href="https://siyuanhuang.com/">Siyuan Huang</a><sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Beijing Institute for General Artificial Intelligence (BIGAI)</span>
+            <br/>
+            <span class="author-block"><sup>2</sup>Peking University </span>
+            <span class="author-block"><sup>3</sup>Carnegie Mellon University </span>
+            <span class="author-block"><sup>4</sup>Tsinghua University</span>
+          </div>
+
+          <p style="font-size: 0.9em; padding: 0.5em 0 0 0;">✶ indicates equal contribution</p>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- Arxiv Link. -->
+              <span class="link-block">
+                <a target="_blank" href="https://arxiv.org/abs/2311.12871"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a target="_blank" href="https://youtu.be/mlnjz4eSjB4?si=NN9z7TpkTPgBAzBw"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a target="_blank" href="https://github.com/embodied-generalist/embodied-generalist"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Data Link. -->
+              <span class="link-block">
+                <a target="_blank" href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fa fa-database"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+
+    <!-- Paper video -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="publication-video">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/mlnjz4eSjB4?si=NN9z7TpkTPgBAzBw"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video -->
+
+    <!-- Paper teaser -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <img src="./assets/teaser.png"/>
+        <p style="text-align: justify; font-size: 0.8em;">
+          The embodied generalist agent LEO, takes ego-centric 2D images, object-centric 3D point clouds, and 
+          texts as input and formulates comprehensive 3D tasks as autoregressive sequence predictions. By instruction-tuning 
+          LEO, it extends the capability of LLMs to multi-modal vision-language-action tasks with a unified model.</p>
+      </div>
+    </div> -->
+    <!-- Paper teaser -->
+
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Leveraging massive knowledge and learning schemes from large language models 
+            (LLMs), recent machine learning models show notable successes in building generalist 
+            agents that exhibit the capability of general-purpose task solving in diverse 
+            domains, including natural language processing, computer vision, and robotics. 
+            However, a significant challenge remains as these models exhibit limited ability in 
+            understanding and interacting with the 3D world. We argue this limitation significantly 
+            hinders the current models from performing real-world tasks and further 
+            achieving general intelligence. To this end, we introduce an embodied multi-modal 
+            and multi-task generalist agent that excels in perceiving, grounding, reasoning, 
+            planning, and acting in the 3D world. Our proposed agent, referred to as LEO, is 
+            trained with shared LLM-based model architectures, objectives, and weights in 
+            two stages: (i) 3D vision-language alignment and (ii) 3D vision-language-action 
+            instruction tuning. To facilitate the training, we meticulously curate and generate 
+            an extensive dataset comprising object-level and scene-level multi-modal tasks 
+            with exceeding scale and complexity, necessitating a deep understanding of and 
+            interaction with the 3D world. Through rigorous experiments, we demonstrate 
+            LEO's remarkable proficiency across a wide spectrum of tasks, including 3D 
+            captioning, question answering, embodied reasoning, embodied navigation, and 
+            robotic manipulation. Our ablation results further provide valuable insights for the 
+            development of future embodied generalist agents.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Model -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Model</h2>
+
+        <!-- Scene representation -->
+        <div class="content has-text-justified">
+          <p>
+            <b>Scene representation.</b> The scene point cloud is partitioned into object-centric point clouds (either ground truth or predicted proposals), 
+            which are then processed by the 3D encoder to obtain object-centric features. We also incorporate an optional 2D branch, 
+            where a 2D encoder processes the agent's ego-view observation to obtain ego-centric features.
+          </p>
+        </div>
+        <div style="width: 80%; margin: 0 auto;">
+          <video poster="" id="scene_representation" autoplay muted loop height="100%">
+            <source src="assets/scene_representation.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!--/ Scene representation -->
+        <br/>
+
+        <!-- Unified sequence -->
+        <div class="content has-text-justified">
+          <p>
+            <b>Unified sequence and objective.</b> The sequence begins with a <i>system message</i> that tells the agent its role and situation. 
+            Subsequent <i>2D image tokens</i> and <i>3D object tokens</i> provide the perceived scene information. 
+            Next an <i>instruction</i> specifies the task or context, and also prompts for the final response. 
+            The learning objective is a simple auto-regressive loss.
+          </p>
+        </div>
+        <!-- Model pipeline -->
+        <div style="width: 90%; margin: 0 auto;">
+          <video poster="" id="model_pipeline" autoplay muted loop height="100%">
+            <source src="assets/model_pipeline.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!--/ Model pipeline -->
+        <!--/ Unified sequence -->
+
+      </div>
+    </div>
+    <!--/ Model -->
+
+    <!-- Data -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Data</h2>
+
+        <!-- Scene representation -->
+        <div class="content has-text-justified">
+          <p>
+            <b>Two-stage scheme: alignment & instruction tuning.</b> We combine existing datasets and LLM-prompted data to create LEO-align and LEO-instruct.
+          </p>
+        </div>
+        <div style="width: 90%; margin: 0 auto;">
+          <video poster="" id="data" autoplay muted loop height="100%">
+            <source src="assets/data.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!--/ Scene representation -->
+
+      </div>
+    </div>
+    <!--/ Data -->
+
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code class="language-bibtex">@article{huang2023embodied,
+  title={An Embodied Generalist Agent in 3D World},
+  author={Huang, Jiangyong and Yong, Silong and Ma, Xiaojian and Linghu, Xiongkun and Li, Puhao and Wang, Yan and Li, Qing and Zhu, Song-Chun and Jia, Baoxiong and Huang, Siyuan},
+  journal={arXiv preprint arXiv:2311.12871},
+  year={2023}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+        <p>
+            This website is licensed under a <a rel="license"
+            href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+        </p>
+        <p>
+            Template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

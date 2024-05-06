@@ -2,13 +2,13 @@
 
 This is the repository that contains source code for the [LEO website](https://embodied-generalist.github.io/).
 
-If you find LEO useful for your work please cite:
+If you find LEO useful for your work, please cite:
 ```bibtex
-@article{huang2023embodied,
+@inproceedings{huang2023embodied,
   title={An Embodied Generalist Agent in 3D World},
   author={Huang, Jiangyong and Yong, Silong and Ma, Xiaojian and Linghu, Xiongkun and Li, Puhao and Wang, Yan and Li, Qing and Zhu, Song-Chun and Jia, Baoxiong and Huang, Siyuan},
-  journal={arXiv preprint arXiv:2311.12871},
-  year={2023}
+  booktitle={Proceedings of the International Conference on Machine Learning (ICML)},
+  year={2024}
 }
 ```
 
